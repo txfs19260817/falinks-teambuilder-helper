@@ -1,9 +1,15 @@
 import { Team } from '@pkmn/sets';
 
 const pokepasteURL = "pokepast.es";
+const createRoomButtonId = "falinks-new-room-btn";
 
-const S4 = (): string => (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-const falinksRoomEndpoint = (packed: string): string => `//www.falinks-teambuilder.com/room/room_${S4()}${S4()}/?protocol=WebSocket&packed=${encodeURIComponent(packed)}`;
+function S4(): string {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+}
+
+function falinksRoomEndpoint(packed: string): string {
+  return `//www.falinks-teambuilder.com/room/room_${S4()}${S4()}/?protocol=WebSocket&packed=${encodeURIComponent(packed)}`;
+}
 
 function pasteToPacked(paste: string): string {
   return Team.import(paste).pack();
@@ -11,11 +17,13 @@ function pasteToPacked(paste: string): string {
 
 function createRoomButton(packed: string) {
   const submitBtn = document.createElement("button");
-  submitBtn.textContent = "Open in a Falinks Teambuilder room";
+  submitBtn.id = createRoomButtonId;
+  submitBtn.textContent = "🤝 Open in a Falinks Teambuilder room";
   submitBtn.type = "button";
   submitBtn.onclick = () => {
     window.open(falinksRoomEndpoint(packed));
   };
+  // pokepast.es potentially erased all css, including button
   Object.assign(submitBtn.style, {
     outline: "none",
     cursor: "pointer",
@@ -43,21 +51,27 @@ function getPasteAtPokepaste(): string {
     .join('');
 }
 
+function getPackedAtShowdown(): string {
+  return unsafeWindow.room?.curTeam?.team ?? '' 
+}
+
 async function main() {
   const { host } = window.location;
-  if (host === pokepasteURL) {
+  if (host === pokepasteURL) { // add the button to Pokepaste aside
     const paste = getPasteAtPokepaste();
     const packed = pasteToPacked(paste);
     const btn = createRoomButton(packed);
     document.querySelector("body > aside").append(btn);
-  } else {
-    const observer = new MutationObserver(function (mutations) {
-      if (location.href.endsWith("teambuilder")) {
-        console.warn(`mutations: ${mutations}`);
+  } else { // add the button to Showdown Teambuilder, next to "Upload to PokePaste" button
+    const observer = new MutationObserver(function () {     
+      const pokepasteForm = document.getElementById("pokepasteForm");
+      if (pokepasteForm && !document.getElementById(createRoomButtonId)) {
+        const packed = getPackedAtShowdown();
+        const btn = createRoomButton(packed);
+        pokepasteForm.appendChild(btn);
       }
     });
-    observer.observe(document, { subtree: true, childList: true });
-
+    observer.observe(document.querySelector("body"), { subtree: true, childList: true });
   }
 }
 
