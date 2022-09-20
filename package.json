@@ -16,7 +16,7 @@
   },
   "private": true,
   "dependencies": {
-    "@trim21/gm-fetch": "^0.0.5"
+    "@pkmn/sets": "latest"
   },
   "devDependencies": {
     "@swc/core": "^1.2.246",

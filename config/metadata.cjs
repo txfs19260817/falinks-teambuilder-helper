@@ -17,12 +17,11 @@ module.exports = {
   source: repository.url,
   license: license,
   match: [
-    "http*://play.pokemonshowdown.com/*", // /teambuilder
+    "http*://play.pokemonshowdown.com/*",
     "http*://*.psim.us/*",
     "http*://pokepast.es/*",
   ],
   require: [],
-  grant: ["GM.xmlHttpRequest"],
-  connect: ["www.falinks-teambuilder.com", "httpbin.org"],
+  connect: ["www.falinks-teambuilder.com"],
   "run-at": "document-end",
 };
