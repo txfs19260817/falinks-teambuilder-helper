@@ -1,27 +1,28 @@
 const {
   author,
-  dependencies,
+  description,
+  name,
   repository,
   version,
+  license
 } = require("../package.json");
 
 module.exports = {
-  name: "webpack-userscript-template",
-  namespace: "https://trim21.me/",
+  name: name,
+  description: description,
+  namespace: "http://tampermonkey.net/",
   version: version,
   author: author,
+  icon: "https://www.falinks-teambuilder.com/favicon.ico",
   source: repository.url,
-  // 'license': 'MIT',
+  license: license,
   match: [
-    "https?://www.example.com/*",
-    "https?://example.com/*",
+    "http*://play.pokemonshowdown.com/*", // /teambuilder
+    "http*://*.psim.us/*",
+    "http*://pokepast.es/*",
   ],
-  require: [
-    `https://cdn.jsdelivr.net/npm/jquery@${dependencies.jquery}/dist/jquery.min.js`,
-    `https://cdn.jsdelivr.net/npm/axios@${dependencies.axios}/dist/axios.min.js`,
-    `https://cdn.jsdelivr.net/npm/axios-userscript-adapter@${dependencies["axios-userscript-adapter"]}/dist/axiosGmxhrAdapter.min.js`,
-  ],
+  require: [],
   grant: ["GM.xmlHttpRequest"],
-  connect: ["httpbin.org"],
+  connect: ["www.falinks-teambuilder.com", "httpbin.org"],
   "run-at": "document-end",
 };
