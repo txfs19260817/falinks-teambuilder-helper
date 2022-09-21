@@ -16,9 +16,7 @@ const webpackConfig = {
   },
   target: "web",
   externals: {
-    jquery: "$",
-    axios: "axios",
-    "axios-userscript-adapter": "axiosGmxhrAdapter",
+    "@pkmn/sets": "window", // rename "@pkmn/sets" as "window" to access `window.PokemonTeams`
   },
   module: {
     rules: [

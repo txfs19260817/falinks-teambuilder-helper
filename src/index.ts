@@ -1,4 +1,4 @@
-import { Team } from '@pkmn/sets';
+import * as pkmnSets from '@pkmn/sets';
 
 const pokepasteURL = "pokepast.es";
 const createRoomButtonId = "falinks-new-room-btn";
@@ -12,7 +12,11 @@ function falinksRoomEndpoint(packed: string): string {
 }
 
 function pasteToPacked(paste: string): string {
-  return Team.import(paste).pack();
+  // pkmnSets.Teams is available in dev, 
+  // whereas `pkmnSets.PokemonTeams` is equivalent to `window.PokemonTeams` exported in prod
+  //@ts-ignore
+  const teams = pkmnSets.Teams ?? pkmnSets.PokemonTeams;
+  return teams.importTeam(paste)?.pack() ?? '';
 }
 
 function createRoomButton(packed: string) {
@@ -52,10 +56,11 @@ function getPasteAtPokepaste(): string {
 }
 
 function getPackedAtShowdown(): string {
-  return unsafeWindow.room?.curTeam?.team ?? '' 
+  // @ts-ignore
+  return unsafeWindow.room?.curTeam?.team ?? ''
 }
 
-async function main() {
+function main() {
   const { host } = window.location;
   if (host === pokepasteURL) { // add the button to Pokepaste aside
     const paste = getPasteAtPokepaste();
@@ -63,7 +68,7 @@ async function main() {
     const btn = createRoomButton(packed);
     document.querySelector("body > aside").append(btn);
   } else { // add the button to Showdown Teambuilder, next to "Upload to PokePaste" button
-    const observer = new MutationObserver(function () {     
+    const observer = new MutationObserver(function () {
       const pokepasteForm = document.getElementById("pokepasteForm");
       if (pokepasteForm && !document.getElementById(createRoomButtonId)) {
         const packed = getPackedAtShowdown();
@@ -75,6 +80,4 @@ async function main() {
   }
 }
 
-main().catch((e) => {
-  console.log(e);
-});
+main();

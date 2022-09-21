@@ -1,10 +1,18 @@
-# This is a project help you build userscript with webpack
+# Falinks teambuilder helper
 
-Just [use this git repo as a template](https://github.com/Trim21/webpack-userscript-template/generate).
+A UserScript helps import teams to a Falinks Teambuilder room. It will be activative on both Pokemon Showdown and PokePaste. Essentially, it creates a "Open in a Falinks Teambuilder room" button on the page. It makes loading the team into [a collaborative teambuilder](https://www.falinks-teambuilder.com/) easier.
 
-[中文说明](./readme.cn.md)
+![Pokemon Showdown](./docs/ps.png)
+![PokePaste](./docs/pp.png)
+
+- Pokemon Showdown: On a team list view in Showdown Teambuilder, the button shows at the bottom, next to "Upload to PokePaste" button.
+- PokePaste: the button shows at the bottom of the right side.
+
+Derived from the template [webpack-userscript-template](https://github.com/Trim21/webpack-userscript-template).
 
 ## dev
+
+[中文说明](./readme.cn.md)
 
 1. Allow Tampermonkey's access to local file URIs [tampermonkey/faq](https://tampermonkey.net/faq.php?ext=dhdg#Q204)
 2. install deps with `npm i` or `npm ci`.
