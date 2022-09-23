@@ -1,12 +1,16 @@
 # Falinks teambuilder helper
 
-A UserScript helps import teams to a Falinks Teambuilder room. It will be activative on both Pokemon Showdown and PokePaste. Essentially, it creates a "Open in a Falinks Teambuilder room" button on the page. It makes loading the team into [a collaborative teambuilder](https://www.falinks-teambuilder.com/) easier.
+![Usage](./docs/usage.gif)
 
-![Pokemon Showdown](./docs/ps.png)
-![PokePaste](./docs/pp.png)
+## Introduction
+
+A UserScript helps import teams to a Falinks Teambuilder room. It will be activative on both Pokemon Showdown and PokePaste. Essentially, it creates a "Open in a Falinks Teambuilder room" button on the page. It makes loading the team into [a collaborative teambuilder](https://www.falinks-teambuilder.com/) easier.
 
 - Pokemon Showdown: On a team list view in Showdown Teambuilder, the button shows at the bottom, next to "Upload to PokePaste" button.
 - PokePaste: the button shows at the bottom of the right side.
+
+![Pokemon Showdown](./docs/ps.png)
+![PokePaste](./docs/pp.png)
 
 Derived from the template [webpack-userscript-template](https://github.com/Trim21/webpack-userscript-template).
 
