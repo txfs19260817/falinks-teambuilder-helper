@@ -3,6 +3,7 @@ import * as pkmnSets from '@pkmn/sets';
 const pokepasteURL = "pokepast.es";
 const createRoomButtonId = "falinks-new-room-btn";
 
+// Random 4-letter string
 function S4(): string {
   return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
 }
@@ -87,10 +88,12 @@ function main() {
     // check both referer and hash to find if a packed team sent from Falinks Teambuilder
     if (hash && document.referrer.includes("falinks-teambuilder")) {
       const packedTeam = decodeURIComponent(document.location.hash.slice(1));
+      // reset the URL to avoid re-importing the team
+      history.replaceState(null, document.title, location.pathname + location.search);
+      // ask the user to import the team
       const doAdd = confirm("Would you like to add this team from Falinks teambuilder to your teams?\n" + packedTeam);
       if (doAdd) {
         addPackedToLocalStorage(packedTeam);
-        history.replaceState(null, document.title, location.pathname + location.search);
         window.location.reload();
       }
     }
