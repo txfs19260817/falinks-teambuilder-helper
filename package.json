@@ -1,7 +1,7 @@
 {
   "name": "falinks-teambuilder-helper",
   "description": "A UserScript helps import teams to a Falinks Teambuilder room",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "author": "txfs19260817",
   "license": "WTFPL",
   "scripts": {
