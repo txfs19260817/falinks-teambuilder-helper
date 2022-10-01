@@ -60,14 +60,20 @@ function getPackedAtShowdown(): string {
   return unsafeWindow.room?.curTeam?.team ?? ''
 }
 
+function addPackedToLocalStorage(packedTeam: string) {
+  const updatedShowdownTeams = packedTeam + "\n" + localStorage.getItem("showdown_teams");
+  localStorage.setItem("showdown_teams", updatedShowdownTeams);
+}
+
 function main() {
-  const { host } = window.location;
+  const { host, hash } = window.location;
   if (host === pokepasteURL) { // add the button to Pokepaste aside
     const paste = getPasteAtPokepaste();
     const packed = pasteToPacked(paste);
     const btn = createRoomButton(packed);
     document.querySelector("body > aside").append(btn);
-  } else { // add the button to Showdown Teambuilder, next to "Upload to PokePaste" button
+  } else {
+    // add the button to Showdown Teambuilder, next to "Upload to PokePaste" button
     const observer = new MutationObserver(function () {
       const pokepasteForm = document.getElementById("pokepasteForm");
       if (pokepasteForm && !document.getElementById(createRoomButtonId)) {
@@ -77,6 +83,17 @@ function main() {
       }
     });
     observer.observe(document.querySelector("body"), { subtree: true, childList: true });
+
+    // check both referer and hash to find if a packed team sent from Falinks Teambuilder
+    if (hash && document.referrer.includes("falinks-teambuilder")) {
+      const packedTeam = decodeURIComponent(document.location.hash.slice(1));
+      const doAdd = confirm("Would you like to add this team from Falinks teambuilder to your teams?\n" + packedTeam);
+      if (doAdd) {
+        addPackedToLocalStorage(packedTeam);
+        history.replaceState(null, document.title, location.pathname + location.search);
+        window.location.reload();
+      }
+    }
   }
 }
 
