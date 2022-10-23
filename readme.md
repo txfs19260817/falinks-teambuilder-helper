@@ -15,13 +15,16 @@ Essentially, it creates a "Open in a Falinks Teambuilder room" button on the pag
 - PokePaste: the button shows at the bottom of the right side.
 
 ![Pokemon Showdown](./docs/ps.png)
-![PokePaste](./docs/pp.png)
 
 ### Load a team from the Falinks Teambuilder room to Showdown
 
 Once you have finished building your team, you can add it to your Pokémon Showdown by clicking the "Load in Showdown" button in the room. It will automatically add your new team in your Showdown teambuilder storage after your confirmation.
 
 ![PokePaste](./docs/ft.png)
+
+### Load a team from PokePaste/Falinks Teambuilder room to Showdown
+
+![pokepaste to showdown](docs/p2s.png "pokepaste to showdown")
 
 ## Acknowledgment
 
@@ -37,11 +40,11 @@ Derived from the template [webpack-userscript-template](https://github.com/Trim2
 
 Now you will see 2 files in `./dist/`
 
--   `dist/index.dev.user.js`: **You should install this userscript in your browser.** It's a simple loader that load `dist/index.debug.user.js` on matched web page.
--   `dist/index.debug.user.js`: This is the development build with `eval-source-map`. It will be automatically loaded by `dist/index.dev.user.js` via `@require file://.../dist/index.debug.user.js` metadata, **Don't add it to your userscript manager.**
+- `dist/index.dev.user.js`: **You should install this userscript in your browser.** It's a simple loader that load `dist/index.debug.user.js` on matched web page.
+- `dist/index.debug.user.js`: This is the development build with `eval-source-map`. It will be automatically loaded by `dist/index.dev.user.js` via `@require file://.../dist/index.debug.user.js` metadata, **Don't add it to your userscript manager.**
 
 4. edit [src/index.ts](./src/index.ts), you can even import css or less files. You can use scss if you like.
-5. go wo <https://www.example.com/> and open console, you'll see it's working.
+5. go wo [https://www.example.com/](https://www.example.com/) and open console, you'll see it's working.
 
 livereload is default enabled, use [this Chrome extension](https://chrome.google.com/webstore/detail/jnihajbhpnppcggbcgedagnkighmdlei)
 
@@ -54,9 +57,9 @@ you'll have to restart webpack server and install newly generated `dist/index.de
 
 you can call `GM.xmlHttpRequest`,
 
-if you prefer `fetch` API, you can use <https://github.com/Trim21/gm-fetch>
+if you prefer `fetch` API, you can use [https://github.com/Trim21/gm-fetch](https://github.com/Trim21/gm-fetch)
 
-If you are using axios, you can use <https://github.com/Trim21/axios-userscript-adapter>
+If you are using axios, you can use [https://github.com/Trim21/axios-userscript-adapter](https://github.com/Trim21/axios-userscript-adapter)
 
 (these libraries are both included already)
 
@@ -70,7 +73,7 @@ There are two ways to using a package on npm.
 
 ### UserScript way
 
-like original UserScript way, you will need to add them to your [user script metadata's require section](./config/metadata.cjs#L13-L17) , and exclude them in [config/webpack.config.base.cjs](./config/webpack.config.base.cjs#L18-L20)
+like original UserScript way, you will need to add them to your [user script metadata&#39;s require section](./config/metadata.cjs#L13-L17) , and exclude them in [config/webpack.config.base.cjs](./config/webpack.config.base.cjs#L18-L20)
 
 ### Webpack way
 
