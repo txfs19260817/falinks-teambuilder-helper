@@ -1,59 +1,44 @@
 import * as pkmnSets from '@pkmn/sets';
-
-const pokepasteURL = "pokepast.es";
-const createRoomButtonId = "falinks-new-room-btn";
-
-// Random 4-letter string
-function S4(): string {
-  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-}
-
-function falinksRoomEndpoint(packed: string): string {
-  return `//www.falinks-teambuilder.com/room/room_${S4()}${S4()}/?protocol=WebSocket&packed=${encodeURIComponent(packed)}`;
-}
+import { createRoomButtonId, pokepasteURL, isSafeReferrer, buildPSButton, falinksRoomEndpoint, showdownTeambuilderEndpoint, S4 } from './utils';
 
 function pasteToPacked(paste: string): string {
-  // pkmnSets.Teams is available in dev, 
+  // `pkmnSets.Teams` is available in dev, 
   // whereas `pkmnSets.PokemonTeams` is equivalent to `window.PokemonTeams` exported in prod
   //@ts-ignore
   const teams = pkmnSets.Teams ?? pkmnSets.PokemonTeams;
   return teams.importTeam(paste)?.pack() ?? '';
 }
 
-function createRoomButton(packed: string) {
-  const submitBtn = document.createElement("button");
-  submitBtn.id = createRoomButtonId;
-  submitBtn.textContent = "🤝 Open in a Falinks Teambuilder room";
-  submitBtn.type = "button";
-  submitBtn.onclick = () => {
-    window.open(falinksRoomEndpoint(packed));
-  };
-  // pokepast.es potentially erased all css, including button
-  Object.assign(submitBtn.style, {
-    outline: "none",
-    cursor: "pointer",
-    textAlign: "center",
-    textDecoration: "none",
-    boxShadow: "0 1px 2px rgba(0,0,0,.2),inset 0 -1px 2px #fff",
-    borderRadius: "5px",
-    fontFamily: "Verdana,Helvetica,Arial,sans-serif",
-    display: "inline-block",
-    color: "#222",
-    textShadow: "0 1px 0 #fff",
-    border: "1px solid #aaa",
-    background: "linear-gradient(to bottom,#f6f6f6,#e3e3e3)",
-    fontSize: "9pt",
-    padding: "3px 8px",
-    marginLeft: "6px",
-    marginBottom: "3px"
+function createRoomButton(packedTeam: string) {
+  return buildPSButton("falinks-new-room-btn", "🤝 Open in a Falinks Teambuilder room", () => {
+    window.open(falinksRoomEndpoint(packedTeam));
   });
-  return submitBtn;
 }
 
-function getPasteAtPokepaste(): string {
-  return [1, 2, 3, 4, 5, 6]
+function createToPSButton(packedTeam: string, format: string = "gen8", name: string = `Falinks Team ${S4()}`) {
+  // seems `Team.pack()` does not add format and team name to the packed team, we do it manually
+  const packedWithFormat = `${format}]${name}|${packedTeam}`;
+  return buildPSButton("falinks-add-team-btn", "🚀 Add to your Showdown teams", () => {
+    window.open(showdownTeambuilderEndpoint(packedWithFormat));
+  });
+}
+
+function getPasteAtPokepaste(): { name: string; format: string; paste: string } {
+  // get format from notes
+  const notes = document.querySelector("body > aside > p")?.textContent ?? '';
+  const format = notes.match(/Format: (.*)/)?.[1] ?? '';
+  // get name from title
+  const name = document.querySelector("body > aside > h1")?.textContent;
+  // get team from textarea
+  const paste = [1, 2, 3, 4, 5, 6]
     .map((i) => document.querySelector(`body > article:nth-child(${i}) > pre`)?.textContent ?? '')
     .join('');
+
+  return {
+    format,
+    name,
+    paste,
+  }
 }
 
 function getPackedAtShowdown(): string {
@@ -68,13 +53,18 @@ function addPackedToLocalStorage(packedTeam: string) {
 
 function main() {
   const { host, hash } = window.location;
-  if (host === pokepasteURL) { // add the button to Pokepaste aside
-    const paste = getPasteAtPokepaste();
+  if (host === pokepasteURL) {
+    // parse the DOM of pokepast.es
+    const { paste, format, name } = getPasteAtPokepaste();
+    // pack the team
     const packed = pasteToPacked(paste);
-    const btn = createRoomButton(packed);
-    document.querySelector("body > aside").append(btn);
+    // add both Create Room and Add To PS buttons to Pokepaste aside
+    document.querySelector("body > aside").append(
+      createRoomButton(packed),
+      createToPSButton(packed, format, name)
+    );
   } else {
-    // add the button to Showdown Teambuilder, next to "Upload to PokePaste" button
+    // add the Create Room button to Showdown Teambuilder, next to "Upload to PokePaste" button
     const observer = new MutationObserver(function () {
       const pokepasteForm = document.getElementById("pokepasteForm");
       if (pokepasteForm && !document.getElementById(createRoomButtonId)) {
@@ -85,13 +75,13 @@ function main() {
     });
     observer.observe(document.querySelector("body"), { subtree: true, childList: true });
 
-    // check both referer and hash to find if a packed team sent from Falinks Teambuilder
-    if (hash && document.referrer.includes("falinks-teambuilder")) {
+    // check both referer and hash to find if a packed team sent from trusted sources
+    if (hash && isSafeReferrer(document.referrer)) {
       const packedTeam = decodeURIComponent(document.location.hash.slice(1));
       // reset the URL to avoid re-importing the team
       history.replaceState(null, document.title, location.pathname + location.search);
       // ask the user to import the team
-      const doAdd = confirm("Would you like to add this team from Falinks teambuilder to your teams?\n" + packedTeam);
+      const doAdd = confirm(`Would you like to add this team from ${document.referrer} to your teams?\n${packedTeam}`);
       if (doAdd) {
         addPackedToLocalStorage(packedTeam);
         window.location.reload();
