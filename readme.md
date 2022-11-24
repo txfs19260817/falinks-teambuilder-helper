@@ -1,6 +1,6 @@
 # Falinks teambuilder helper
 
-## Script link: https://greasyfork.org/zh-CN/scripts/451746-falinks-teambuilder-helper
+## Script link: https://greasyfork.org/scripts/451746-falinks-teambuilder-helper
 
 ![Usage 1: PokePaste/Showdown to Falinks room](./docs/usage1.gif)
 ![Usage 2: Falinks room to Pokemon Showdown](./docs/usage2.gif)
