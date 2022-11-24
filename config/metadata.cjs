@@ -21,7 +21,7 @@ module.exports = {
     "http*://*.psim.us/*",
     "http*://pokepast.es/*",
   ],
-  require: ["https://unpkg.com/@pkmn/sets/build/production.min.js"],
+  require: ["https://unpkg.com/@pkmn/sets/build/index.min.js"],
   connect: ["www.falinks-teambuilder.com"],
   "run-at": "document-end",
 };

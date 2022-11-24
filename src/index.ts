@@ -2,11 +2,9 @@ import * as pkmnSets from '@pkmn/sets';
 import { createRoomButtonId, pokepasteURL, isSafeReferrer, buildPSButton, falinksRoomEndpoint, showdownTeambuilderEndpoint, S4 } from './utils';
 
 function pasteToPacked(paste: string): string {
-  // `pkmnSets.Teams` is available in dev, 
-  // whereas `pkmnSets.PokemonTeams` is equivalent to `window.PokemonTeams` exported in prod
+  // see: https://github.com/pkmn/ps/blob/main/sets/README.md#browser
   //@ts-ignore
-  const teams = pkmnSets.Teams ?? pkmnSets.PokemonTeams;
-  return teams.importTeam(paste)?.pack() ?? '';
+  return pkmnSets.pkmn.sets.Teams.importTeam(paste)?.pack() ?? '';
 }
 
 function createRoomButton(packedTeam: string) {

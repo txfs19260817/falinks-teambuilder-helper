@@ -46,9 +46,11 @@ export function isSafeReferrer(s: string): boolean {
 }
 
 export function falinksRoomEndpoint(packed: string): string {
+  // packed team will be passed as a query param
   return `//www.${falinksTeambuilderURL}/room/room_${S4()}${S4()}/?protocol=WebSocket&packed=${encodeURIComponent(packed)}`;
 }
 
 export function showdownTeambuilderEndpoint(packed: string): string {
+  // packed team will be in the URL hash
   return `https://${showdownURL}/teambuilder#${packed}`;
 }
