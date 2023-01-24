@@ -20,6 +20,7 @@ module.exports = {
     "http*://play.pokemonshowdown.com/*",
     "http*://*.psim.us/*",
     "http*://pokepast.es/*",
+    "http*://play.limitlesstcg.com/*",
   ],
   require: ["https://unpkg.com/@pkmn/sets/build/index.min.js"],
   connect: ["www.falinks-teambuilder.com"],

@@ -4,6 +4,8 @@ export function S4(): string {
 }
 
 // Button building
+const buttonStyles = ["ps", "limitless"] as const;
+export type ButtonStyle = typeof buttonStyles[number];
 export const createRoomButtonId = "falinks-new-room-btn";
 
 const showdownBtnStyle = {
@@ -25,14 +27,19 @@ const showdownBtnStyle = {
   marginBottom: "3px",
 };
 
-export const buildPSButton = (eid: string, text: string, onclick: () => void) => {
+export const buildPSButton = (eid: string, text: string, onclick: () => void, style: ButtonStyle = "ps") => {
   const submitBtn = document.createElement("button");
   submitBtn.id = eid;
   submitBtn.textContent = text;
   submitBtn.type = "button";
   submitBtn.onclick = onclick;
   // pokepast.es potentially erased all css, including button. So add it back
-  Object.assign(submitBtn.style, showdownBtnStyle);
+  if (style === "ps") {
+    Object.assign(submitBtn.style, showdownBtnStyle);
+  } else if (style === "limitless") {
+    submitBtn.classList.add("export"); // reuse the "export" button style
+    submitBtn.style.marginLeft = "6px"; // add some margin to the left
+  }
   return submitBtn;
 };
 
@@ -40,9 +47,15 @@ export const buildPSButton = (eid: string, text: string, onclick: () => void) =>
 export const pokepasteURL = "pokepast.es";
 export const falinksTeambuilderURL = "falinks-teambuilder.com";
 export const showdownURL = "play.pokemonshowdown.com";
-const safeReferrers = [pokepasteURL, falinksTeambuilderURL];
+export const limitlesstcgURL = "play.limitlesstcg.com";
+const safeReferrers = [pokepasteURL, falinksTeambuilderURL, limitlesstcgURL];
 export function isSafeReferrer(s: string): boolean {
   return safeReferrers.some((r) => s.includes(r));
+}
+
+export function isLimitlessTeamlistURL(url: string): boolean {
+  const { hostname, pathname } = new URL(url);
+  return hostname === limitlesstcgURL && (pathname.endsWith("teamlist") || pathname.endsWith("teamlist/"));
 }
 
 export function falinksRoomEndpoint(packed: string): string {

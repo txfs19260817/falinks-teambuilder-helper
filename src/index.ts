@@ -1,5 +1,5 @@
 import * as pkmnSets from '@pkmn/sets';
-import { createRoomButtonId, pokepasteURL, isSafeReferrer, buildPSButton, falinksRoomEndpoint, showdownTeambuilderEndpoint, S4 } from './utils';
+import { createRoomButtonId, pokepasteURL, isSafeReferrer, buildPSButton, falinksRoomEndpoint, showdownTeambuilderEndpoint, S4, isLimitlessTeamlistURL, ButtonStyle } from './utils';
 
 function pasteToPacked(paste: string): string {
   // see: https://github.com/pkmn/ps/blob/main/sets/README.md#browser
@@ -7,18 +7,18 @@ function pasteToPacked(paste: string): string {
   return pkmnSets.pkmn.sets.Teams.importTeam(paste)?.pack() ?? '';
 }
 
-function createRoomButton(packedTeam: string) {
+function createRoomButton(packedTeam: string, style: ButtonStyle = "ps") {
   return buildPSButton("falinks-new-room-btn", "🤝 Open in a Falinks Teambuilder room", () => {
     window.open(falinksRoomEndpoint(packedTeam));
-  });
+  }, style);
 }
 
-function createToPSButton(packedTeam: string, format: string = "gen8", name: string = `Falinks Team ${S4()}`) {
+function createToPSButton(packedTeam: string, format: string = "gen9", name: string = `Falinks Team ${S4()}`, style: ButtonStyle = "ps") {
   // seems `Team.pack()` does not add format and team name to the packed team, we do it manually
   const packedWithFormat = `${format}]${name}|${packedTeam}`;
   return buildPSButton("falinks-add-team-btn", "🚀 Add to your Showdown teams", () => {
     window.open(showdownTeambuilderEndpoint(packedWithFormat));
-  });
+  }, style);
 }
 
 function getPasteAtPokepaste(): { name: string; format: string; paste: string } {
@@ -50,7 +50,7 @@ function addPackedToLocalStorage(packedTeam: string) {
 }
 
 function main() {
-  const { host, hash } = window.location;
+  const { host, hash, href } = window.location;
   if (host === pokepasteURL) {
     // parse the DOM of pokepast.es
     const { paste, format, name } = getPasteAtPokepaste();
@@ -61,7 +61,20 @@ function main() {
       createRoomButton(packed),
       createToPSButton(packed, format, name)
     );
-  } else {
+  } else if (isLimitlessTeamlistURL(href)) {
+    // @ts-ignore
+    const paste = teamlist; // teamlist is a global variable defined in this page
+    console.log(paste);
+    const packed = pasteToPacked(paste);
+
+    const title = document.querySelector("body > div.pre-content > div > div > div > div").textContent;
+    const author = document.querySelector("body > div.main > div > div.infobox > div.heading").textContent;
+    const name = `${author} @ ${title}`;
+    document.querySelector("body > div.main > div > div.teamlist > div.buttons").append(
+      createRoomButton(packed, "limitless"),
+      createToPSButton(packed, "gen9vgc2023series2", name, "limitless") // use gen9vgc2023series2 as format atm
+    )
+  } else { // Showdown Teambuilder
     // add the Create Room button to Showdown Teambuilder, next to "Upload to PokePaste" button
     const observer = new MutationObserver(function () {
       const pokepasteForm = document.getElementById("pokepasteForm");

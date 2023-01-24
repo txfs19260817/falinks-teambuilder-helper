@@ -9,7 +9,7 @@
 
 A UserScript helps import teams to a Falinks Teambuilder room. It will be activated on both Pokemon Showdown and PokePaste.
 
-### Import a team from PokePaste/Showdown to a Falinks Teambuilder room
+### Import a team from PokePaste/Showdown/Limitless TCG to a Falinks Teambuilder room
 
 Essentially, it creates a "Open in a Falinks Teambuilder room" button on the page. It makes loading the team into [a collaborative teambuilder](https://www.falinks-teambuilder.com/) easier.
 
@@ -24,9 +24,10 @@ Once you have finished building your team, you can add it to your Pokémon Showd
 
 ![PokePaste](./docs/ft.png)
 
-### Load a team from PokePaste/Falinks Teambuilder room to Showdown
+### Load a team from PokePaste/Falinks Teambuilder room/Limitless TCG to Showdown
 
 ![pokepaste to showdown](docs/p2s.png "pokepaste to showdown")
+![limitless to showdown](docs/limitless_to.png "limitless to showdown")
 
 ## Acknowledgment
 
